@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.daly.edumin.basic.mapper.UserMapper">
+	<resultMap id="UserMap" type="UserEntity">
+		<result column="user_id" property="userId"/>
+		<result column="username" property="username"/>
+		<result column="password" property="password"/>
+		<result column="employeeid" property="employeeId"/>
+		<result column="employeename" property="employeeName"/>
+		<result column="email" property="email"/>
+		<result column="mobile" property="mobile"/>
+		<result column="status" property="status"/>
+		<result column="loginstatus" property="loginStatus"/>
+		<result column="imgurl" property="imgUrl"/>
+		<result column="create_time" property="createTime"/>
+	</resultMap>
+	<insert id="insertUser" parameterType="UserEntity" >
+		<selectKey keyProperty="userId" order="AFTER" resultType="java.lang.Integer">
+			select LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO sys_user (<include refid="key"/>) values(<include refid="value"/>)
+	</insert>
+		<sql id="key">
+			<trim suffixOverrides=",">
+				<if test="username != null and username != ''">username,</if>
+				<if test="password != null and password != ''">password,</if>
+				<if test="employeeId != null and employeeId != ''">employeeid,</if>
+				<if test="employeeName != null and employeeName != ''">employeename,</if>
+				<if test="birthday != null and birthday != ''">birthday,</if>
+				<if test="mobile != null and mobile != ''">mobile,</if>
+				<if test="email != null and email != ''">email,</if>
+				<if test="imgUrl != null and imgUrl != ''">imgurl,</if>
+				<if test="status != null and status != ''">status,</if>
+			</trim>
+		</sql>
+		<sql id="value">
+			<trim suffixOverrides=",">
+				<if test="username != null and username != ''" >#{username},</if>
+				<if test="password != null and password != ''">#{password},</if>
+				<if test="employeeId != null and employeeId != ''">#{employeeId},</if>
+				<if test="employeeName != null and employeeName != ''">#{employeeName},</if>
+				<if test="birthday != null and birthday != ''">#{birthday},</if>
+				<if test="mobile != null and mobile != ''">#{mobile},</if>
+				<if test="email != null and email != ''">#{email},</if>
+				<if test="imgUrl != null and imgUrl != ''">#{imgUrl},</if>
+				<if test="status != null and status != ''">#{status},</if>
+			</trim>
+		</sql>
+
+	<update id="updateById" >
+		  UPDATE sys_user
+		<trim prefix="set" suffixOverrides=",">
+			<if test="username != null and username != ''"> username=#{username},</if>
+			<if test="password != null and password != ''">password=#{password},</if>
+			<if test="employeeId != null and employeeId != ''">employeeid=#{employeeId},</if>
+			<if test="employeeName != null and employeeName != ''">employeename=#{employeeName},</if>
+			<if test="birthday != null and birthday != ''">birthday=#{birthday},</if>
+			<if test="mobile != null and mobile != ''">mobile=#{mobile},</if>
+			<if test="email != null and email != ''">email=#{email},</if>
+			<if test="imgUrl != null and imgUrl != ''">imgurl=#{imgUrl},</if>
+			<if test="status != null and status != ''">status=#{status},</if>
+		</trim>
+		where user_id = #{userId}
+	</update>
+	<delete id="delUsersByUserIds" >
+		DELETE  FROM sys_user WHERE user_id in
+		<foreach item="userIdArr" collection="array" open="(" separator="," close=")">
+		#{userIdArr}
+		</foreach>
+	</delete>
+	<sql id="sqlBody">
+		<trim prefix="WHERE" prefixOverrides="AND||OR">
+			<if test="searchFilter != null" >
+				<if test="searchFilter.containsKey('username') and columnFilterMap.username !=''"> AND username like "%${searchFilter.username}%" </if>
+				<if test="searchFilter.containsKey('birthday') and columnFilterMap.birthday !=''"> AND birthday like "%${searchFilter.birthday}%" </if>
+				<if test="searchFilter.containsKey('allColumns')">
+					and ( username like "%${searchFilter.allColumns}%"
+					OR birthday like "%${searchFilter.allColumns}%")
+				</if>
+			</if>
+			<if test="columnFilterMap != null " >
+				<if test="!columnFilterMap.containsKey('allColData')">
+					<if test="columnFilterMap.containsKey('username') and columnFilterMap.username !='' "> AND  username in ( ${columnFilterMap.username}) </if>
+					<if test="columnFilterMap.containsKey('birthday') and columnFilterMap.birthday !=''"> AND  birthday in ( ${columnFilterMap.birthday}) </if>
+				</if>
+			</if>
+		</trim>
+		<trim prefix="order by"  suffixOverrides="," >
+			<if test="sortParam != null">
+				<if test="sortParam.containsKey('username') and sortParam.username != '' and sortParam.username != 'normal'">username ${sortParam.username},</if>
+				<if test="sortParam.containsKey('birthday') and sortParam.birthday != '' and sortParam.birthday != 'normal'">birthday ${sortParam.birthday},</if>
+			</if>
+		</trim>
+	</sql>
+	<select id="getUserByUserFilter" parameterType="UserEntity" resultMap="UserMap">
+		SELECT * FROM sys_user
+		<include refid="sqlBody"/>
+	</select>
+
+	<select id="getAllResFilter" resultType="Map">
+		select  GROUP_CONCAT(DISTINCT  username) username,GROUP_CONCAT(DISTINCT birthday) birthday from sys_user
+		<include refid="sqlBody"/>
+	</select>
+
+	<select id="getUserInfoById" resultMap="UserMap">
+		select * from sys_user where user_id = #{userId}
+	</select>
+	
+	<!-- 查询用户的所有菜单ID --> 
+	<select id="queryAllMenuIdByUserId" resultType="Long">
+		select m.menu_id from sys_user_role ur
+			LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id
+			LEFT JOIN sys_menu m on rm.menu_id = m.menu_id
+		where ur.user_id = #{userId}
+	</select>
+	
+	<select id="queryByUserName" resultMap="UserMap">
+		select * from sys_user where username = #{username}
+	</select>
+
+
+	<update id="modifyPassword" parameterType="map">
+		update sys_user set `password` = #{newPassword} 
+			where user_id = #{userId} and password = #{password}
+	</update>
+
+
+</mapper>

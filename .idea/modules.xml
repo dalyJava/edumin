@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/edumin.iml" filepath="$PROJECT_DIR$/edumin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/edumin_basic/edumin_basic.iml" filepath="$PROJECT_DIR$/edumin_basic/edumin_basic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/edumin_file/edumin_file.iml" filepath="$PROJECT_DIR$/edumin_file/edumin_file.iml" />
+      <module fileurl="file://$PROJECT_DIR$/edumin_web/edumin_web.iml" filepath="$PROJECT_DIR$/edumin_web/edumin_web.iml" />
+    </modules>
+  </component>
+</project>

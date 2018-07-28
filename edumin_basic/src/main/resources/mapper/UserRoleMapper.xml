@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.daly.edumin.basic.mapper.UserRoleMapper">
+
+	<select id="getUserRoleByUserId" resultType="Long">
+		SELECT role_id FROM sys_user_role WHERE user_id = #{userId}
+	</select>
+	<delete id="delUserRoleByUserIds">
+		DELETE  FROM sys_user_role WHERE user_id  IN
+		<foreach item="userIdsArr" collection="array" open="(" separator="," close=")">
+			#{userIdsArr}
+		</foreach>
+	</delete>
+
+	<insert id="saveUserRole" >
+		INSERT INTO sys_user_role(user_id,role_id) VALUES
+		<foreach collection="list" item="userRoleEntityList" index="index" separator=",">
+			(#{userRoleEntityList.userId},#{userRoleEntityList.roleId})
+		</foreach>
+	</insert>
+
+
+	<!-- 根据userid 查询角色名id -->
+	<select id="queryRoleIdByUserId" resultType="Long">
+		SELECT t1.role_id FROM sys_user_role t1
+		WHERE t1.user_id = #{userId}
+	</select>
+
+</mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.daly.edumin.basic.mapper.MenuMapper">
+	<resultMap id="MenuMap" type="com.daly.edumin.basic.domain.MenuEntity">
+		<result column="menu_id" property="menuId"/>
+		<result column="parent_id" property="parentId"/>
+		<result column="parentname" property="parentName"/>
+		<result column="name" property="name"/>
+		<result column="url" property="url"/>
+		<result column="perms" property="perms"/>
+		<result column="type" property="type"/>
+		<result column="icon" property="icon"/>
+		<result column="order_num" property="orderNum"/>
+	</resultMap>
+	<!-- 查询用户的所有权限 -->
+	<select id="getAllPerms" resultType="String">
+		SELECT DISTINCT sm.perms   FROM sys_role_menu rm LEFT JOIN sys_menu sm ON sm.menu_id = rm.menu_id
+		WHERE  rm.role_id IN
+		<foreach collection="list" open="(" separator="," close=")" item="roleIdsList">
+			#{roleIdsList}
+		</foreach>
+	</select>
+	<select id="getMenuListByFilter" resultMap="MenuMap">
+		SELECT s1.*,s2.name parentname FROM sys_menu s1 LEFT JOIN sys_menu s2 ON s1.parent_id = s2.menu_id
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="menuId != null and menuId != ''">OR s1.menu_id =#{menuId}</if>
+			<if test="name != null and name != ''">OR s1.name like "%"#{name}"%"</if>
+			<if test="parentName != null and parentName != ''">OR s2.name like "%"#{parentName}"%"</if>
+		</trim>
+
+	</select>
+
+	<delete id="delMenuByMenuIds">
+		DELETE  FROM sys_menu WHERE menu_id in
+		<foreach item="menusArr" collection="array" open="(" separator="," close=")">
+			#{menusArr}
+		</foreach>
+	</delete>
+
+	<select id="getAllMenuList" resultMap="MenuMap">
+		SELECT s1.*,s2.name parentname FROM sys_menu s1 LEFT JOIN sys_menu s2 ON s1.parent_id = s2.menu_id order by s1.order_num asc
+	</select>
+	<update id="updateMenuById">
+		 UPDATE sys_menu
+		<trim prefix="set" suffixOverrides=",">
+			<if test="parentId != null and parentId != ''">parent_id = #{parentId},</if>
+			<if test="name != null and name != ''">name=#{name},</if>
+			<if test="url != null and url != ''">url=#{url},</if>
+			<if test="perms != null and perms != ''">perms=#{perms},</if>
+			<if test="type != null and type != ''">type=#{type},</if>
+			<if test="icon != null and icon != ''">icon=#{icon},</if>
+			<if test="orderNum != null and orderNum != ''">order_num=#{orderNum},</if>
+		</trim>
+		 WHERE menu_id = #{menuId}
+	</update>
+	<insert id="saveMenu" >
+		INSERT INTO sys_menu (<include refid="key"/>) values(<include refid="value"/>)
+	</insert>
+		<sql id="key">
+			<trim suffixOverrides=",">
+				<if test="parentId != null and parentId != ''">parent_id,</if>
+				<if test="name != null and name != ''">name,</if>
+				<if test="url != null and url != ''">url,</if>
+				<if test="perms != null and perms != ''">perms,</if>
+				<if test="type != null and type != ''">type,</if>
+				<if test="icon != null and icon != ''">icon,</if>
+				<if test="orderNum != null and orderNum != ''">order_num,</if>
+			</trim>
+		</sql>
+		<sql id="value">
+			<trim suffixOverrides=",">
+				<if test="parentId != null and parentId != ''">#{parentId},</if>
+				<if test="name != null and name != ''">#{name},</if>
+				<if test="url != null and url != ''">#{url},</if>
+				<if test="perms != null and perms != ''">#{perms},</if>
+				<if test="type != null and type != ''">#{type},</if>
+				<if test="icon != null and icon != ''">#{icon},</if>
+				<if test="orderNum != null and orderNum != ''">#{orderNum},</if>
+			</trim>
+		</sql>
+	<select id="getMenuListNobutton" resultMap="MenuMap">
+		SELECT s1.*,s2.name parentname FROM sys_menu s1 LEFT JOIN sys_menu s2 ON s1.parent_id = s2.menu_id
+		 where s1.type != 2 order by s1.order_num asc
+	</select>
+
+
+	<select id="getMenuListByRoleIds" resultMap="MenuMap">
+		SELECT DISTINCT sm.menu_id,sm.parent_id, sm.name,sm.url
+		FROM sys_role_menu rm LEFT JOIN sys_menu sm ON sm.menu_id = rm.menu_id
+		WHERE  sm.type != 2 AND rm.role_id IN
+		 <foreach item="roleIdsList" collection="list" open="(" separator="," close=")">
+		  #{roleIdsList}
+		 </foreach>
+	</select>
+</mapper>

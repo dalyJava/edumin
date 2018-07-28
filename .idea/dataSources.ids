@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="MySQL - edumin_basic@localhost" uuid="68d10b38-47b6-49d1-b873-ec9b53e6e3d8">
+    <database-info product="MySQL" version="5.6.17" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.46 ( Revision: 9cc87a48e75c2d2e87c1a293b2862ce651cb256e )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
+    <database-model serializer="dbm" rdbms="MYSQL" format-version="2.5">
+      <schema id="1" name="edumin_basic"/>
+      <table id="2" parent="1" name="sys_menu">
+        <comment>菜单管理</comment>
+      </table>
+      <table id="3" parent="1" name="sys_role">
+        <comment>角色</comment>
+      </table>
+      <table id="4" parent="1" name="sys_role_menu">
+        <comment>角色与菜单对应关系</comment>
+      </table>
+      <table id="5" parent="1" name="sys_user">
+        <comment>系统用户</comment>
+      </table>
+      <table id="6" parent="1" name="sys_user_role">
+        <comment>用户与角色对应关系</comment>
+      </table>
+      <column id="7" parent="2" name="menu_id">
+        <mandatory>1</mandatory>
+        <data-type>bigint(20)</data-type>
+      </column>
+      <column id="8" parent="2" name="parent_id">
+        <comment>父菜单ID，一级菜单为0</comment>
+        <data-type>bigint(20)</data-type>
+      </column>
+      <column id="9" parent="2" name="name">
+        <comment>菜单名称</comment>
+        <data-type>varchar(50)</data-type>
+      </column>
+      <column id="10" parent="2" name="url">
+        <comment>菜单URL</comment>
+        <data-type>varchar(200)</data-type>
+      </column>
+      <column id="11" parent="2" name="perms">
+        <comment>授权(多个用逗号分隔，如：user:list,user:create)</comment>
+        <data-type>varchar(500)</data-type>
+      </column>
+      <column id="12" parent="2" name="type">
+        <comment>类型   0：目录   1：菜单   2：按钮</comment>
+        <data-type>int(11)</data-type>
+      </column>
+      <column id="13" parent="2" name="icon">
+        <comment>菜单图标</comment>
+        <data-type>varchar(50)</data-type>
+      </column>
+      <column id="14" parent="2" name="order_num">
+        <comment>排序</comment>
+        <data-type>int(11)</data-type>
+      </column>
+      <key id="15" parent="2" name="PRIMARY">
+        <columns>menu_id</columns>
+        <primary>1</primary>
+      </key>
+      <column id="16" parent="3" name="role_id">
+        <mandatory>1</mandatory>
+        <data-type>bigint(20)</data-type>
+      </column>
+      <column id="17" parent="3" name="role_name">
+        <comment>角色名称</comment>
+        <data-type>varchar(100)</data-type>
+      </column>
+      <column id="18" parent="3" name="remark">
+        <comment>备注</comment>
+        <data-type>varchar(100)</data-type>
+      </column>
+      <column id="19" parent="3" name="create_time">
+        <comment>创建时间</comment>
+        <data-type>datetime</data-type>
+      </column>
+      <key id="20" parent="3" name="PRIMARY">
+        <columns>role_id</columns>
+        <primary>1</primary>
+      </key>
+      <column id="21" parent="4" name="id">
+        <mandatory>1</mandatory>
+        <data-type>bigint(20)</data-type>
+      </column>
+      <column id="22" parent="4" name="role_id">
+        <comment>角色ID</comment>
+        <data-type>bigint(20)</data-type>
+      </column>
+      <column id="23" parent="4" name="menu_id">
+        <comment>菜单ID</comment>
+        <data-type>bigint(20)</data-type>
+      </column>
+      <key id="24" parent="4" name="PRIMARY">
+        <columns>id</columns>
+        <primary>1</primary>
+      </key>
+      <column id="25" parent="5" name="user_id">
+        <mandatory>1</mandatory>
+        <data-type>bigint(20)</data-type>
+      </column>
+      <column id="26" parent="5" name="username">
+        <comment>用户名</comment>
+        <mandatory>1</mandatory>
+        <data-type>varchar(50)</data-type>
+      </column>
+      <column id="27" parent="5" name="employeeid">
+        <comment>员工编号</comment>
+        <mandatory>1</mandatory>
+        <data-type>varchar(50)</data-type>
+      </column>
+      <column id="28" parent="5" name="employeename">
+        <comment>员工姓名</comment>
+        <mandatory>1</mandatory>
+        <data-type>varchar(50)</data-type>
+      </column>
+      <column id="29" parent="5" name="birthday">
+        <comment>生日</comment>
+        <data-type>datetime</data-type>
+      </column>
+      <column id="30" parent="5" name="password">
+        <comment>密码</comment>
+        <data-type>varchar(100)</data-type>
+      </column>
+      <column id="31" parent="5" name="email">
+        <comment>邮箱</comment>
+        <data-type>varchar(100)</data-type>
+      </column>
+      <column id="32" parent="5" name="mobile">
+        <comment>手机号</comment>
+        <data-type>varchar(100)</data-type>
+      </column>
+      <column id="33" parent="5" name="status">
+        <comment>状态  0：禁用   1：正常</comment>
+        <data-type>tinyint(4)</data-type>
+      </column>
+      <column id="34" parent="5" name="loginstatus">
+        <comment>状态  0：离线   1：在线</comment>
+        <data-type>tinyint(4)</data-type>
+      </column>
+      <column id="35" parent="5" name="imgurl">
+        <comment>头像图片url</comment>
+        <data-type>varchar(100)</data-type>
+      </column>
+      <column id="36" parent="5" name="create_time">
+        <comment>创建时间</comment>
+        <data-type>datetime</data-type>
+      </column>
+      <index id="37" parent="5" name="username">
+        <columns>username</columns>
+        <desc-columns></desc-columns>
+        <unique>1</unique>
+      </index>
+      <key id="38" parent="5" name="PRIMARY">
+        <columns>user_id</columns>
+        <primary>1</primary>
+      </key>
+      <key id="39" parent="5" name="username">
+        <columns>username</columns>
+        <underlying-index>username</underlying-index>
+      </key>
+      <column id="40" parent="6" name="id">
+        <mandatory>1</mandatory>
+        <data-type>bigint(20)</data-type>
+      </column>
+      <column id="41" parent="6" name="user_id">
+        <comment>用户ID</comment>
+        <data-type>bigint(20)</data-type>
+      </column>
+      <column id="42" parent="6" name="role_id">
+        <comment>角色ID</comment>
+        <data-type>bigint(20)</data-type>
+      </column>
+      <key id="43" parent="6" name="PRIMARY">
+        <columns>id</columns>
+        <primary>1</primary>
+      </key>
+    </database-model>
+  </data-source>
+</component>
